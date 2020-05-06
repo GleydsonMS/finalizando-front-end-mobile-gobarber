@@ -14,6 +14,8 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
+import api from '../../services/api';
+
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import Input from '../../components/Input';
@@ -31,7 +33,7 @@ interface SignUpFormData {
 
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const natigation = useNavigation();
+  const navigation = useNavigation();
 
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
@@ -51,9 +53,14 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
 
-      // await api.post('/users', data);
+      await api.post('/users', data);
 
-      // history.push('/');
+      Alert.alert(
+        'Cadastro realizado com sucesso!',
+        'Você já pode fazer login na aplicação.',
+      );
+
+      navigation.navigate('SignIn');
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -132,7 +139,7 @@ const SignUp: React.FC = () => {
                   formRef.current?.submitForm();
                 }}
               >
-                Entrar
+                Cadastrar
               </Button>
             </Form>
           </Container>
@@ -141,7 +148,7 @@ const SignUp: React.FC = () => {
 
       <BackToSignIn
         onPress={() => {
-          natigation.goBack();
+          navigation.goBack();
         }}
       >
         <Icon name="arrow-left" size={20} color="#fff" />
